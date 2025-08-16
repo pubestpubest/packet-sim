@@ -1,5 +1,5 @@
-# Build & Deploy Vite app (pnpm) to GitHub Pages
-name: Build & Deploy (pnpm) — GitHub Pages
+# Build & Deploy (pnpm) — GitHub Pages
+name: Build & Deploy (pnpm)
 
 on:
   push:
@@ -11,7 +11,6 @@ permissions:
   pages: write
   id-token: write
 
-# Keep only one deploy running at a time
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -29,23 +28,18 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Enable Corepack (pnpm)
-        run: corepack enable
-
+      # 👇 This installs pnpm so future steps can run `pnpm`
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-          run_install: false
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          run_install: true   # does `pnpm install` for you
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Build
-        run: pnpm run build  # should output to ./dist
+        run: pnpm run build   # outputs to ./dist
 
       - name: Disable Jekyll on Pages
         run: touch dist/.nojekyll
